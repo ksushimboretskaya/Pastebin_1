@@ -6,7 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 import java.util.UUID;
 
-public class PastebinTest {
+public class PastebinTest{
     private WebDriver driver;
 
     @BeforeSuite
