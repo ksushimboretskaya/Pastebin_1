@@ -2,14 +2,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import java.util.Random;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.testng.annotations.DataProvider;
+import org.openqa.selenium.support.PageFactory;
 
-public class PastebinTest{
+public class PastebinTest {
+    pageObjectModel objPOM;
     private WebDriver driver;
     private static final String URL = "https://pastebin.com";
     private static Logger log = Logger.getLogger(PastebinTest.class.getName());
@@ -26,45 +29,37 @@ public class PastebinTest{
     @BeforeTest
     public void profileSetup() {
         driver.manage().window().maximize();
-        log.info("The profile setup process is completed");
         driver.get(URL);
-        log.info("The app setup process is completed");
+        log.info("The profile setup process is completed");
     }
+
     @Test(priority =1,description ="Check entered text")
     public void sendTextAndOutput() {
+        objPOM = new pageObjectModel(driver);
         String symbols = "abcdefghijklmnopqrstuvwxyz"+"1234567890"+"ABCDEFGHIJKLNMOPQRSTUVWXYZ";
         String random = new Random().ints(10, 0, symbols.length()).mapToObj(symbols::charAt).map(Object::toString).collect(Collectors.joining());
-        WebElement searchField = driver.findElement(By.id("postform-text"));
-        searchField.sendKeys(random);
-        String textAgain = searchField.getAttribute("value");
-        log.info("Text in textarea:" + textAgain);
+        objPOM.setText(random);
     }
     @Test(priority = 2, description = "Check syntax highlighting ")
-    public void clickSyntaxHighlighting(String data) {
+    public void clickSyntaxHighlighting() {
+        objPOM = new pageObjectModel(driver);
         String expectedTitle = "Bash";
-        WebElement selectElement = driver.findElement(By.id("select2-postform-format-container"));
-        selectElement.click();
-        WebElement options = driver.findElement(By.xpath("//li[contains(text(),'"+expectedTitle+"')]"));
-        options.click();
-        String actualTitle = selectElement.getAttribute("title");
-        Assert.assertEquals(actualTitle, expectedTitle,"The title of the button doesn't match the expected(bash)");
+        objPOM.setElementDownList();
+        Assert.assertEquals(objPOM.getActualName(), expectedTitle,"The title of the button doesn't match the expected(bash)");
     }
     @Test(priority = 3,description = "Check paste expiration",dataProvider = "data-provider")
     public void clickPasteExpiration(String data){
+        objPOM = new pageObjectModel(driver);
         String time = data;
-        WebElement pasteExpiration = driver.findElement(By.id("select2-postform-expiration-container"));
-        pasteExpiration.click();
-        WebElement pasteExp = driver.findElement(By.xpath("//li[contains(text(), '"+time+"')]"));
-        pasteExp.click();
-        String actualTittle=pasteExpiration.getAttribute("title");
+        objPOM.setElementPasteExpiration();
         String expectedTittle="10 Minutes";
-        Assert.assertEquals(actualTittle, expectedTittle,"The title of the button doesn't match the expected(10 Minutes)");
+        Assert.assertEquals(objPOM.getActualNamePasteExp(), expectedTittle,"The title of the button doesn't match the expected(10 Minutes)");
         log.info("The click element process is completed");
     }
     @Test(priority=4,description ="Create New Paste")
     public void clickCreateNewPaste() {
-        WebElement button = driver.findElement(By.xpath("//button[contains(text(),'Create New Paste')]"));
-        button.click();
+        objPOM = new pageObjectModel(driver);
+        objPOM.clickOnTheButtonToCreateNewPaste();
         log.info("The click create new paste process is completed");
     }
 }
