@@ -1,6 +1,4 @@
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -16,7 +14,7 @@ public class PastebinTest {
     public Object[][] dataProviderMethod() {
         return new Object[][] { { "10 Minutes" }, { "Never" } };
     }
-    @BeforeSuite
+    @Test(priority = 0, description = " Set driver amd website")
     public void setWebSite() {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
         driver = new ChromeDriver();
