@@ -7,16 +7,16 @@ import org.openqa.selenium.support.PageFactory;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class pageObjectModel {
+public class PageResultSearch {
     WebDriver driver;
     @FindBy(id="postform-text")
-    private WebElement searchFieldLocator;
+    private WebElement searchFieldLocatorInputFrame;
     @FindBy(id="select2-postform-format-container")
-    private WebElement selectElementLocator;
+    private WebElement selectElementLocatorSyntax;
     @FindBy(id ="select2-postform-expiration-container")
     private WebElement pasteExpirationLocator;
     @FindBy(xpath = "//button[contains(text(),'Create New Paste')]")
-    private WebElement buttonLocator;
+    private WebElement buttonLocatorCreateNewPaste;
     public void init(final WebDriver driver){
         PageFactory.initElements(driver,this);
     }
@@ -27,19 +27,19 @@ public class pageObjectModel {
                 .mapToObj(symbols::charAt)
                 .map(Object::toString)
                 .collect(Collectors.joining());
-        searchFieldLocator.sendKeys(random);
+        searchFieldLocatorInputFrame.sendKeys(random);
     }
-    public void setElementDownList(){
-        selectElementLocator.click();
+    public void setElementOfSyntaxDownList(){
+        selectElementLocatorSyntax.click();
     }
     public void setSyntax(String syntax){
         driver.findElement(By.xpath("//li[contains(text(),'"+syntax+"')]"))
                 .click();
     }
     public String getActualName(){
-        return	selectElementLocator.getAttribute("title");
+        return	selectElementLocatorSyntax.getAttribute("title");
     }
-    public void setElementPasteExpiration(){
+    public void setElementPasteExpirationDownList(){
         pasteExpirationLocator.click();
     }
     public void setTime(String time){
@@ -50,6 +50,6 @@ public class pageObjectModel {
         return pasteExpirationLocator.getAttribute("title");
     }
     public void clickOnTheButtonToCreateNewPaste(){
-        buttonLocator.click();
+        buttonLocatorCreateNewPaste.click();
     }
 }

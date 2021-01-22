@@ -14,38 +14,38 @@ public class PastebinTest {
     public Object[][] dataProviderMethod() {
         return new Object[][] { { "10 Minutes" }, { "Never" } };
     }
-    @Test(priority = 0, description = " Set driver amd website")
-    public void setWebSite() {
+    @BeforeTest
+    public void setUp() {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get(URL);
         log.info("The profile setup process is completed");
     }
-    @Test(priority =1,description ="Check entered text")
-    public void sendTextAndOutput() {
-        pageObjectModel page = PageFactory.initElements(driver, pageObjectModel.class);
-        page.sendText();
+    @Test(priority =1,description ="Checking text input")
+    public void sendText() {
+        PageResultSearch pageSearch = PageFactory.initElements(driver, PageResultSearch.class);
+        pageSearch.sendText();
     }
-    @Test(priority = 2, description = "Check syntax highlighting ")
-    public void clickSyntaxHighlighting() {
-        pageObjectModel page = PageFactory.initElements(driver, pageObjectModel.class);
-        page.setElementDownList();
+    @Test(priority = 2, description = "Checking syntax highlighting input")
+    public void syntaxValidation() {
+        PageResultSearch page = PageFactory.initElements(driver, PageResultSearch.class);
+        page.setElementOfSyntaxDownList();
         page.setSyntax("Bash");
         Assert.assertEquals(page.getActualName(), "Bash","The title of the button doesn't match the expected(bash)");
     }
-    @Test(priority = 3,description = "Check paste expiration", dataProvider = "set-time")
-    public void clickPasteExpiration(String data){
-        pageObjectModel page = PageFactory.initElements(driver, pageObjectModel.class);
-        page.setElementPasteExpiration();
+    @Test(priority = 3,description = "Checking paste expiration input ", dataProvider = "set-time")
+    public void PasteExpirationValidation(String data){
+        PageResultSearch page = PageFactory.initElements(driver, PageResultSearch.class);
+        page.setElementPasteExpirationDownList();
         String expectedTittle = data;
         page.setTime("10 Minutes");
         Assert.assertEquals(page.getActualNamePasteExp(), expectedTittle,"The title of the button doesn't match the expected(10 Minutes)");
         log.info("The click element process is completed");
     }
     @Test(priority=4,description ="Create New Paste")
-    public void clickCreateNewPaste() {
-        pageObjectModel page = PageFactory.initElements(driver, pageObjectModel.class);
+    public void clickToCreateNewPaste() {
+        PageResultSearch page = PageFactory.initElements(driver, PageResultSearch.class);
         page.clickOnTheButtonToCreateNewPaste();
         log.info("The click create new paste process is completed");
     }
