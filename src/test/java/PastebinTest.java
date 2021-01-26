@@ -10,6 +10,7 @@ import org.openqa.selenium.support.PageFactory;
 
 public class PastebinTest {
     private WebDriver driver;
+    private PageResultSearch pageSearch;
     private static final String URL = "https://pastebin.com";
     private static Logger log = Logger.getLogger(PastebinTest.class.getName());
 
@@ -24,41 +25,35 @@ public class PastebinTest {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get(URL);
+        pageSearch = PageFactory.initElements(driver, PageResultSearch.class);
         log.info("The profile setup process is completed");
     }
 
     @BeforeGroups("selectListItem")
     public void sendText() {
-        PageResultSearch pageSearch = PageFactory.initElements(driver, PageResultSearch.class);
         pageSearch.sendText();
     }
 
     @Test(priority = 1, description = "Checking syntax highlighting input", groups = "selectListItem")
-    public void syntaxValidation() {
-        PageResultSearch page = PageFactory.initElements(driver, PageResultSearch.class);
-        page.setElementOfSyntaxDownList();
-        String selectItemSyntax = "Bash";
-        String selectListItemSintax = String.format("%s", selectItemSyntax);
-        page.setSyntax(selectItemSyntax);
-        Assert.assertEquals(page.getActualName(), "Bash", "Selected list item doesn't match the expected:" + selectListItemSintax + "");
+    public void syntaxListItemValidation() {
+        pageSearch.setElementOfSyntaxDownList();
+        String selectListItemSyntax = String.format("%s", "Bash");
+        pageSearch.setSyntax(selectListItemSyntax);
+        Assert.assertEquals(pageSearch.getActualNameListItemSyntax(), selectListItemSyntax, "Selected list item doesn't match the expected:" + selectListItemSyntax + "");
     }
 
     @Test(priority = 2, description = "Checking paste expiration input ", dataProvider = "set-time", groups = "selectListItem")
-    public void pasteExpirationValidation(String data) {
-        PageResultSearch page = PageFactory.initElements(driver, PageResultSearch.class);
-        page.setElementPasteExpirationDownList();
-        String expectedTittle = data;
-        String selectItemPasteExpiration = "10 Minutes";
-        String selectItemPasteExp = String.format("%s", selectItemPasteExpiration);
-        page.setTime(selectItemPasteExpiration);
-        Assert.assertEquals(page.getActualNamePasteExp(), expectedTittle, "Selected list item doesn't match the expected:" + selectItemPasteExp + "");
+    public void pasteExpirationValidation(String stringFromDataProvider) {
+        pageSearch.setElementPasteExpirationDownList();
+        String selectItemPasteExp = stringFromDataProvider;
+        pageSearch.setTime(selectItemPasteExp);
+        Assert.assertEquals(pageSearch.getActualNameListItemPasteExp(), selectItemPasteExp, "Selected list item doesn't match the expected:" + selectItemPasteExp + "");
         log.info("The click element process is completed");
     }
 
     @Test(priority = 3, description = "Create New Paste", groups = "selectListItem")
     public void checkCreateNewPasteButton() {
-        PageResultSearch page = PageFactory.initElements(driver, PageResultSearch.class);
-        page.clickOnTheButtonToCreateNewPaste();
+        pageSearch.clickOnTheButtonToCreateNewPaste();
         log.info("The click create new paste process is completed");
     }
 }

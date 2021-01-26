@@ -22,13 +22,17 @@ public class PageResultSearch {
         PageFactory.initElements(driver, this);
     }
 
-    public void sendText() {
+    public String generateRandomString() {
         String symbols = "abcdefghijklmnopqrstuvwxyz" + "1234567890" + "ABCDEFGHIJKLNMOPQRSTUVWXYZ";
-        String random = new Random()
+        return new Random()
                 .ints(10, 0, symbols.length())
                 .mapToObj(symbols::charAt)
                 .map(Object::toString)
                 .collect(Collectors.joining());
+    }
+
+    public void sendText() {
+        String random = generateRandomString();
         searchFieldInputFrame.sendKeys(random);
     }
 
@@ -41,7 +45,7 @@ public class PageResultSearch {
                 .click();
     }
 
-    public String getActualName() {
+    public String getActualNameListItemSyntax() {
         return selectElementSyntax.getAttribute("title");
     }
 
@@ -54,7 +58,7 @@ public class PageResultSearch {
                 .click();
     }
 
-    public String getActualNamePasteExp() {
+    public String getActualNameListItemPasteExp() {
         return pasteExpiration.getAttribute("title");
     }
 
