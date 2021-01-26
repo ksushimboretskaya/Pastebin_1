@@ -1,54 +1,59 @@
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
+
 import java.util.logging.Logger;
+
 import org.testng.annotations.DataProvider;
 import org.openqa.selenium.support.PageFactory;
 
 public class PastebinTest {
     private WebDriver driver;
+    private PageResultSearch pageSearch;
     private static final String URL = "https://pastebin.com";
     private static Logger log = Logger.getLogger(PastebinTest.class.getName());
+
     @DataProvider(name = "set-time")
     public Object[][] dataProviderMethod() {
-        return new Object[][] { { "10 Minutes" }, { "Never" } };
+        return new Object[][]{{"10 Minutes"}, {"Never"}};
     }
-    @BeforeSuite
-    public void setWebSite() {
+
+    @BeforeTest
+    public void setUp() {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get(URL);
+        pageSearch = PageFactory.initElements(driver, PageResultSearch.class);
         log.info("The profile setup process is completed");
     }
-    @Test(priority =1,description ="Check entered text")
-    public void sendTextAndOutput() {
-        pageObjectModel page = PageFactory.initElements(driver, pageObjectModel.class);
-        page.sendText();
+
+    @BeforeGroups("selectListItem")
+    public void sendText() {
+        pageSearch.sendText();
     }
-    @Test(priority = 2, description = "Check syntax highlighting ")
-    public void clickSyntaxHighlighting() {
-        pageObjectModel page = PageFactory.initElements(driver, pageObjectModel.class);
-        page.setElementDownList();
-        page.setSyntax("Bash");
-        Assert.assertEquals(page.getActualName(), "Bash","The title of the button doesn't match the expected(bash)");
+
+    @Test(priority = 1, description = "Checking syntax highlighting input", groups = "selectListItem")
+    public void syntaxListItemValidation() {
+        pageSearch.setElementOfSyntaxDownList();
+        String selectListItemSyntax = String.format("%s", "Bash");
+        pageSearch.setSyntax(selectListItemSyntax);
+        Assert.assertEquals(pageSearch.getActualNameListItemSyntax(), selectListItemSyntax, "Selected list item doesn't match the expected:" + selectListItemSyntax + "");
     }
-    @Test(priority = 3,description = "Check paste expiration", dataProvider = "set-time")
-    public void clickPasteExpiration(String data){
-        pageObjectModel page = PageFactory.initElements(driver, pageObjectModel.class);
-        page.setElementPasteExpiration();
-        String expectedTittle = data;
-        page.setTime("10 Minutes");
-        Assert.assertEquals(page.getActualNamePasteExp(), expectedTittle,"The title of the button doesn't match the expected(10 Minutes)");
+
+    @Test(priority = 2, description = "Checking paste expiration input ", dataProvider = "set-time", groups = "selectListItem")
+    public void pasteExpirationValidation(String stringFromDataProvider) {
+        pageSearch.setElementPasteExpirationDownList();
+        String selectItemPasteExp = stringFromDataProvider;
+        pageSearch.setTime(selectItemPasteExp);
+        Assert.assertEquals(pageSearch.getActualNameListItemPasteExp(), selectItemPasteExp, "Selected list item doesn't match the expected:" + selectItemPasteExp + "");
         log.info("The click element process is completed");
     }
-    @Test(priority=4,description ="Create New Paste")
-    public void clickCreateNewPaste() {
-        pageObjectModel page = PageFactory.initElements(driver, pageObjectModel.class);
-        page.clickOnTheButtonToCreateNewPaste();
+
+    @Test(priority = 3, description = "Create New Paste", groups = "selectListItem")
+    public void checkCreateNewPasteButton() {
+        pageSearch.clickOnTheButtonToCreateNewPaste();
         log.info("The click create new paste process is completed");
     }
 }
