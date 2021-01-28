@@ -4,11 +4,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.util.Random;
-import java.util.stream.Collectors;
 
 public class PageResultSearch {
     WebDriver driver;
+
     @FindBy(id = "postform-text")
     private WebElement searchFieldInputFrame;
     @FindBy(id = "select2-postform-format-container")
@@ -17,23 +16,23 @@ public class PageResultSearch {
     private WebElement pasteExpiration;
     @FindBy(xpath = "//button[contains(text(),'Create New Paste')]")
     private WebElement buttonCreateNewPaste;
+    @FindBy(className = "textarea")
+    private WebElement fieldWithEnteredText;
+
+    public String pasteContent = RandomUtil.generateRandomString();
 
     public void init(final WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
 
-    public String generateRandomString() {
-        String symbols = "abcdefghijklmnopqrstuvwxyz" + "1234567890" + "ABCDEFGHIJKLNMOPQRSTUVWXYZ";
-        return new Random()
-                .ints(10, 0, symbols.length())
-                .mapToObj(symbols::charAt)
-                .map(Object::toString)
-                .collect(Collectors.joining());
+
+    public void enterRandomStringToSearchField() {
+        searchFieldInputFrame.sendKeys(pasteContent);
     }
 
-    public void sendText() {
-        String random = generateRandomString();
-        searchFieldInputFrame.sendKeys(random);
+    public String getAttributeFromTextField() {
+        return fieldWithEnteredText.getAttribute("value");
+
     }
 
     public void setElementOfSyntaxDownList() {
@@ -45,11 +44,11 @@ public class PageResultSearch {
                 .click();
     }
 
-    public String getActualNameListItemSyntax() {
+    public String getChosenSyntaxValue() {
         return selectElementSyntax.getAttribute("title");
     }
 
-    public void setElementPasteExpirationDownList() {
+    public void setElementOfPasteExpirationDownList() {
         pasteExpiration.click();
     }
 
@@ -58,7 +57,7 @@ public class PageResultSearch {
                 .click();
     }
 
-    public String getActualNameListItemPasteExp() {
+    public String getChosenTimeValue() {
         return pasteExpiration.getAttribute("title");
     }
 

@@ -10,7 +10,7 @@ import org.openqa.selenium.support.PageFactory;
 
 public class PastebinTest {
     private WebDriver driver;
-    private PageResultSearch pageSearch;
+    private PageResultSearch itemForSearch;
     private static final String URL = "https://pastebin.com";
     private static Logger log = Logger.getLogger(PastebinTest.class.getName());
 
@@ -25,35 +25,33 @@ public class PastebinTest {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get(URL);
-        pageSearch = PageFactory.initElements(driver, PageResultSearch.class);
+        itemForSearch = PageFactory.initElements(driver, PageResultSearch.class);
         log.info("The profile setup process is completed");
     }
 
-    @BeforeGroups("selectListItem")
-    public void sendText() {
-        pageSearch.sendText();
+    @Test(priority = 1, description = "Checking syntax highlighting input")
+    public void downListValidation() {
+        itemForSearch.setElementOfSyntaxDownList();
+        String expectedSyntax = String.format("%s", "Bash");
+        itemForSearch.setSyntax(expectedSyntax);
+        Assert.assertEquals(itemForSearch.getChosenSyntaxValue(), expectedSyntax, "Selected list item doesn't match the expected:" + expectedSyntax + "");
+        log.info("The downlist validation process is completed");
     }
 
-    @Test(priority = 1, description = "Checking syntax highlighting input", groups = "selectListItem")
-    public void syntaxListItemValidation() {
-        pageSearch.setElementOfSyntaxDownList();
-        String selectListItemSyntax = String.format("%s", "Bash");
-        pageSearch.setSyntax(selectListItemSyntax);
-        Assert.assertEquals(pageSearch.getActualNameListItemSyntax(), selectListItemSyntax, "Selected list item doesn't match the expected:" + selectListItemSyntax + "");
+    @Test(priority = 2, description = "Checking paste expiration input ", dataProvider = "set-time")
+    public void downListItemValidation(String stringFromDataProvider) {
+        itemForSearch.setElementOfPasteExpirationDownList();
+        String expectedPasteExp = stringFromDataProvider;
+        itemForSearch.setTime(expectedPasteExp);
+        Assert.assertEquals(itemForSearch.getChosenTimeValue(), expectedPasteExp, "Selected list item doesn't match the expected:" + expectedPasteExp + "");
+        log.info("The downlist item validation process is completed");
     }
 
-    @Test(priority = 2, description = "Checking paste expiration input ", dataProvider = "set-time", groups = "selectListItem")
-    public void pasteExpirationValidation(String stringFromDataProvider) {
-        pageSearch.setElementPasteExpirationDownList();
-        String selectItemPasteExp = stringFromDataProvider;
-        pageSearch.setTime(selectItemPasteExp);
-        Assert.assertEquals(pageSearch.getActualNameListItemPasteExp(), selectItemPasteExp, "Selected list item doesn't match the expected:" + selectItemPasteExp + "");
-        log.info("The click element process is completed");
-    }
-
-    @Test(priority = 3, description = "Create New Paste", groups = "selectListItem")
-    public void checkCreateNewPasteButton() {
-        pageSearch.clickOnTheButtonToCreateNewPaste();
-        log.info("The click create new paste process is completed");
+    @Test(priority = 3, description = "Checking actual and expected text")
+    public void checkTextValidation() {
+        itemForSearch.enterRandomStringToSearchField();
+        itemForSearch.clickOnTheButtonToCreateNewPaste();
+        Assert.assertEquals(itemForSearch.getAttributeFromTextField(), itemForSearch.pasteContent, "Paste content doesn't match");
+        log.info("The check text validation process is completed");
     }
 }
