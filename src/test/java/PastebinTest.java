@@ -1,6 +1,5 @@
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.pagefactory.ElementLocatorFactory;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -38,6 +37,7 @@ public class PastebinTest {
         Assert.assertEquals(itemForSearch.getChosenSyntaxValue(), expectedSyntax, "Selected list item doesn't match the expected:" + expectedSyntax + "");
         log.info("The downlist validation process is completed");
     }
+
     @Test(priority = 2, description = "Checking syntax highlighting input")
     public void downListValidationJava() {
         itemForSearch.setElementOfSyntaxDownList();
@@ -46,6 +46,7 @@ public class PastebinTest {
         Assert.assertEquals(itemForSearch.getChosenSyntaxValue(), expectedSyntax, "Selected list item doesn't match the expected:" + expectedSyntax + "");
         log.info("The downlist validation process is completed");
     }
+
     @Test(priority = 3, description = "Checking syntax highlighting input")
     public void downListValidationC() {
         itemForSearch.setElementOfSyntaxDownList();
@@ -54,6 +55,7 @@ public class PastebinTest {
         Assert.assertEquals(itemForSearch.getChosenSyntaxValue(), expectedSyntax, "Selected list item doesn't match the expected:" + expectedSyntax + "");
         log.info("The downlist validation process is completed");
     }
+
     @Test(priority = 4, description = "Checking syntax highlighting input")
     public void downListValidationJavaScript() {
         itemForSearch.setElementOfSyntaxDownList();
@@ -62,6 +64,7 @@ public class PastebinTest {
         Assert.assertEquals(itemForSearch.getChosenSyntaxValue(), expectedSyntax, "Selected list item doesn't match the expected:" + expectedSyntax + "");
         log.info("The downlist validation process is completed");
     }
+
     @Test(priority = 5, description = "Checking syntax highlighting input")
     public void downListValidation() {
         itemForSearch.setElementOfSyntaxDownList();
