@@ -1,5 +1,6 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -13,13 +14,13 @@ public class PageResultSearch {
     @FindBy(id = "select2-postform-format-container")
     private WebElement selectElementSyntax;
     @FindBy(id = "select2-postform-expiration-container")
-    private WebElement pasteExpiration;
+    private WebElement selectElementsPasteExpiration;
     @FindBy(xpath = "//button[contains(text(),'Create New Paste')]")
     private WebElement buttonCreateNewPaste;
     @FindBy(className = "textarea")
-    private WebElement fieldWithEnteredText;
+    private WebElement searchFieldWithEnteredText;
 
-    public String pasteContent = RandomUtil.generateRandomString();
+    public static String pasteContent = RandomUtil.generateRandomString();
 
     public void init(final WebDriver driver) {
         PageFactory.initElements(driver, this);
@@ -31,7 +32,7 @@ public class PageResultSearch {
     }
 
     public String getAttributeFromTextField() {
-        return fieldWithEnteredText.getAttribute("value");
+        return searchFieldWithEnteredText.getAttribute("value");
 
     }
 
@@ -49,7 +50,7 @@ public class PageResultSearch {
     }
 
     public void setElementOfPasteExpirationDownList() {
-        pasteExpiration.click();
+        selectElementsPasteExpiration.click();
     }
 
     public void setTime(String time) {
@@ -58,7 +59,7 @@ public class PageResultSearch {
     }
 
     public String getChosenTimeValue() {
-        return pasteExpiration.getAttribute("title");
+        return selectElementsPasteExpiration.getAttribute("title");
     }
 
     public void clickOnTheButtonToCreateNewPaste() {
