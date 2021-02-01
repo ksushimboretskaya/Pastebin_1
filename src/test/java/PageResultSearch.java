@@ -16,9 +16,9 @@ public class PageResultSearch {
     @FindBy(id = "select2-postform-expiration-container")
     private WebElement selectElementsPasteExpiration;
     @FindBy(xpath = "//button[contains(text(),'Create New Paste')]")
-    private WebElement buttonCreateNewPaste;
+    private WebElement createNewPasteButton;
     @FindBy(className = "textarea")
-    private WebElement searchFieldWithEnteredText;
+    private WebElement searchTextInput;
 
     public static String pasteContent = RandomUtil.generateRandomString();
 
@@ -32,7 +32,7 @@ public class PageResultSearch {
     }
 
     public String getAttributeFromTextField() {
-        return searchFieldWithEnteredText.getAttribute("value");
+        return searchTextInput.getAttribute("value");
 
     }
 
@@ -40,7 +40,7 @@ public class PageResultSearch {
         selectElementSyntax.click();
     }
 
-    public void setSyntax(String syntax) {
+    public void setSyntaxElementOfDownList(String syntax) {
         driver.findElement(By.xpath("//li[contains(text(),'" + syntax + "')]"))
                 .click();
     }
@@ -63,6 +63,6 @@ public class PageResultSearch {
     }
 
     public void clickOnTheButtonToCreateNewPaste() {
-        buttonCreateNewPaste.click();
+        createNewPasteButton.click();
     }
 }
