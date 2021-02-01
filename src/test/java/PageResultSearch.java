@@ -20,27 +20,24 @@ public class PageResultSearch {
     @FindBy(className = "textarea")
     private WebElement searchTextInput;
 
-    public static String pasteContent = RandomUtil.generateRandomString();
 
     public void init(final WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
 
-
-    public void enterRandomStringToSearchField() {
-        searchFieldInputFrame.sendKeys(pasteContent);
+    public void enterRandomStringToSearchField(String pasteContentString) {
+        searchFieldInputFrame.sendKeys(pasteContentString);
     }
 
-    public String getAttributeFromTextField() {
+    public String getEnteredTextValue() {
         return searchTextInput.getAttribute("value");
-
     }
 
-    public void setElementOfSyntaxDownList() {
+    public void setElementOfSyntaxDropDown() {
         selectElementSyntax.click();
     }
 
-    public void setSyntaxElementOfDownList(String syntax) {
+    public void setSyntaxElementOfDropDown(String syntax) {
         driver.findElement(By.xpath("//li[contains(text(),'" + syntax + "')]"))
                 .click();
     }
@@ -49,7 +46,7 @@ public class PageResultSearch {
         return selectElementSyntax.getAttribute("title");
     }
 
-    public void setElementOfPasteExpirationDownList() {
+    public void setElementOfPasteExpirationDropDown() {
         selectElementsPasteExpiration.click();
     }
 
@@ -62,7 +59,7 @@ public class PageResultSearch {
         return selectElementsPasteExpiration.getAttribute("title");
     }
 
-    public void clickOnTheButtonToCreateNewPaste() {
+    public void clickCreateNewPasteButton() {
         createNewPasteButton.click();
     }
 }
